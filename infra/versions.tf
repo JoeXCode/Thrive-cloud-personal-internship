@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.16"
+  required_version = "~> 1.9.0"
 
   required_providers {
     aws = {
@@ -7,17 +7,23 @@ terraform {
       version = "~> 5.60"
     }
   }
+
+  backend "s3" {
+    bucket         = "group1b-tfstate-565122144736"
+    key            = "infra/terraform.tfstate"
+    region         = "eu-west-1"
+    dynamodb_table = "group1b-tflock"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
   region = var.region
 
-  # Every resource gets these tags without you writing them each time.
-  # The Group tag is what makes per-group cost reporting possible.
   default_tags {
     tags = {
       Group     = var.group_name
-      Programme = "cloud-internship"
+      Programme = "Thrive-cloud-internship"
       ManagedBy = "terraform"
     }
   }
